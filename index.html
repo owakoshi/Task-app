@@ -2,34 +2,77 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>やること</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 いますぐやれ！！</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
   <div class="app">
-    <h1 class="logo">🔥😡</h1><h2>いますぐやれ！！</h2><h1 class="logo">😡🔥</h1>
+    <!-- ヘッダー：タイトル + 統計 -->
+    <div class="header">
+      <div class="title-row">
+        <h1 class="logo">🔥😡</h1><h2>いますぐやれ！！</h2><h1 class="logo">😡🔥</h1>
+      </div>
+      <div class="stats-bar" id="statsBar">
+        <div class="stat">
+          <span class="stat-label">完了</span>
+          <span class="stat-value" id="statDone">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">達成率</span>
+          <span class="stat-value" id="statRate">--%</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">🔥連続</span>
+          <span class="stat-value" id="statStreak">0日</span>
+        </div>
+        <div class="stat shame">
+          <span class="stat-label">💀先延ばし</span>
+          <span class="stat-value" id="statShame">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 期限切れ警告バナー -->
+    <div class="overdue-banner" id="overdueBanner" style="display:none;">
+      ⚠️ 期限切れのタスクがあります！いますぐやれ！！ ⚠️
+    </div>
+
     <div class="container">
+      <!-- 入力エリア -->
       <div class="input-area">
-        <input id="taskInput" type="text" placeholder="やることを書く">
-        <select id="category">
-
-          <option value="仕事">仕事</option>
-          <option value="私用">私用</option>
-          <option value="学習">学習</option>
-        </select>
-        
-        <select id="priority">
-          <option value="3">高</option>
-          <option value="2">中</option>
-          <option value="1">低</option>
-        </select>
-
-        <button id="addBtn">追加</button>
+        <div class="input-row">
+          <input id="taskInput" type="text" placeholder="やることを書く">
+          <button id="addBtn">追加</button>
+        </div>
+        <div class="input-row-sub">
+          <select id="category">
+            <option value="仕事">💼 仕事</option>
+            <option value="家事">🏠 家事</option>
+            <option value="買物">🛒 買物</option>
+            <option value="健康">💪 健康</option>
+            <option value="学習">📚 学習</option>
+            <option value="私用">🙋 私用</option>
+          </select>
+          <select id="priority">
+            <option value="3">🔴 高</option>
+            <option value="2">🟡 中</option>
+            <option value="1">🔵 低</option>
+          </select>
+          <input id="deadlineInput" type="datetime-local">
+        </div>
       </div>
 
+      <!-- タスクリスト -->
       <ul id="taskList"></ul>
+
+      <!-- 完了タスク一括削除 -->
+      <button id="clearDoneBtn" class="clear-done-btn" style="display:none;">
+        🗑️ 完了済みを一括削除
+      </button>
     </div>
+  </div>
 
   <script src="js/main.js"></script>
 </body>
