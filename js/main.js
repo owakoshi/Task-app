@@ -293,17 +293,19 @@ function renderTasks() {
     meta.textContent = formatDate(task.createdAt);
     metaRow.appendChild(meta);
 
-    // カウントダウン
-    if (countdown) {
-      const countdownEl = document.createElement("span");
-      countdownEl.className = `countdown ${countdown.level}`;
-      countdownEl.textContent = countdown.text;
-      metaRow.appendChild(countdownEl);
-    } else if (task.deadline && !task.done) {
-      const deadlineMeta = document.createElement("small");
-      deadlineMeta.className = "meta";
-      deadlineMeta.textContent = `〆 ${formatDate(task.deadline)}`;
-      metaRow.appendChild(deadlineMeta);
+    // カウントダウン（クリックで期限編集）
+    if (!task.done) {
+      const deadlineEl = document.createElement("span");
+      if (countdown) {
+        deadlineEl.className = `countdown ${countdown.level}`;
+        deadlineEl.textContent = countdown.text;
+      } else {
+        deadlineEl.className = "deadline-add";
+        deadlineEl.textContent = "＋期限";
+      }
+      deadlineEl.title = "クリックで期限を編集";
+      deadlineEl.onclick = () => startEditingDeadline(deadlineEl, index);
+      metaRow.appendChild(deadlineEl);
     }
 
     li.append(mainRow, metaRow);
@@ -351,6 +353,39 @@ function startEditing(span, index) {
       span.textContent = tasks[index].text;
       span.blur();
     }
+  };
+}
+
+/* ===== 期限編集 ===== */
+function startEditingDeadline(el, index) {
+  if (tasks[index].done) return;
+
+  const input = document.createElement("input");
+  input.type = "datetime-local";
+  input.className = "deadline-edit-input";
+
+  if (tasks[index].deadline) {
+    const d = new Date(tasks[index].deadline);
+    const local = new Date(d.getTime() - d.getTimezoneOffset() * 60000)
+      .toISOString().slice(0, 16);
+    input.value = local;
+  }
+
+  el.replaceWith(input);
+  input.focus();
+
+  const finish = () => {
+    tasks[index].deadline = input.value
+      ? new Date(input.value).toISOString()
+      : null;
+    saveTasks();
+    renderTasks();
+  };
+
+  input.onblur = finish;
+  input.onkeydown = e => {
+    if (e.key === "Enter") { e.preventDefault(); input.blur(); }
+    if (e.key === "Escape") renderTasks();
   };
 }
 
